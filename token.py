@@ -82,7 +82,7 @@ class Token(object):
       lookahead (char): A 1-character lookahead.
     """
     self._ch = ch
-    self._lookahead = None
+    self._lookahead = lookahead
 
     self.kind = Token.t_kind(ch, lookahead)
 
