@@ -6,6 +6,7 @@ import itertools
 import sys
 
 import token
+import util
 
 
 __author__ = 'dan.barella@gmail.com (Dan Barella)'
@@ -17,17 +18,23 @@ class Lexer(object):
   def __init__(self, source):
     """Init a Lexer with a source file.
 
+    Upon initializing the Lexer, the contents of the source file will be read
+    into memory. This is because KitKat is a 2D language, so we can't just read
+    from left to right.
+
     Args:
       source (file): The (opened) source file object.
     """
-    self.source = source
+    self._source = source
+    self.lines = source.readlines()
+    self.text_field = util.pad(self.lines, None)
 
   def __iter__(self):
-    """Return a token iterator over self.source.
+    """Return a token iterator over the input text.
 
     Since defining generator objects is kinda confusing, I've implemented this
     as a generator factory, where the _token_generator function is automagically
-    turned into a generator using the yield statement. Then it's as easy as
+    turned into a generator using the yield statement. Then it's "as easy as"
     returning the result of calling that function.
 
     That is a mouthful to say though...
