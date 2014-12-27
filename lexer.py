@@ -1,14 +1,18 @@
 # KitKat Parser
 
 
+from __future__ import print_function
 import itertools
+import sys
+
+import token
 
 
 __author__ = 'dan.barella@gmail.com (Dan Barella)'
 
 
 class Lexer(object):
-  """Lexes KitKat tokens according to the rules described in the README."""
+  """Lexes KitKat token according to the rules described in the README."""
 
   def __init__(self, source):
     """Init a Lexer with a source file.
@@ -37,16 +41,24 @@ class Lexer(object):
         pairs = itertools.izip_longest(line, line[1:])
 
         for ch1, ch2 in pairs:
-          # if ch1 == T_SINGLE_QUOTE:
-            # Do stuff.
+          t = token.Token(ch1, ch2)
 
-          yield ch1
+          # If we get an escaped character, skip the lookahead.
+          # Note that characterize takes care of improperly escaped charaters.
+          if not t.is_kind(token.TOKENS[...]):
+            yield t
+            continue
+          else:
+            yield t
 
     return _token_generator()
 
 
 def main():
-  pass
+  with open(sys.argv[1], 'r') as f:
+    l = Lexer(f)
+    for i in l:
+      print(i)
 
 
 if __name__ == '__main__':
