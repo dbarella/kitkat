@@ -10,5 +10,20 @@ def pad(field_2d, padding):
 
   Returns (list of (list of object)): A padded 2-dimensional field.
   """
-  # max_width = max(map(len, field_2d))
-  pass
+  if not field_2d:  # Nothing to do.
+    return field_2d
+
+  intermediate = []
+
+  intermediate.append([padding] * (2 + len(field_2d[0])))  # Padding over top
+
+  for row in field_2d:
+    intermediate_row = [padding]
+    intermediate_row.extend(row)
+    intermediate_row.append(padding)
+
+    intermediate.append(intermediate_row)
+
+  intermediate.append([padding] * (2 + len(field_2d[-1])))  # Bottom
+
+  return intermediate
