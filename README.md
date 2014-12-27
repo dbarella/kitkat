@@ -30,6 +30,8 @@ e.g.
 Furthermore, period (.) is treated as a special character, synonymous with
 space. To print a literal period, escape it with that leading single quote.
 
+---
+
 The program control begins at the top left of the board, i.e. the first
 character in the file. If no movement control character is encountered, > is
 assumed.
