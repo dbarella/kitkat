@@ -70,7 +70,7 @@ class Lexer(object):
         #   t = token.Token(ch1, ch2)
 
         #   # If we get an escaped character, skip the lookahead.
-        #   # Note that characterize takes care of improperly escaped characters.
+        #   # Note that Token takes care of improperly escaped characters.
         #   if not t.is_kind(token.TOKENS[...]):
         #     yield t
         #     continue
@@ -78,14 +78,15 @@ class Lexer(object):
         #     yield t
         yield ch
 
+        elif self._direction == Lexer.LEFT:
+          j -= 1
+        elif self._direction == Lexer.RIGHT:
+          j += 1
         if self._direction == Lexer.UP:
           i -= 1
         elif self._direction == Lexer.DOWN:
           i += 1
-        elif self._direction == Lexer.RIGHT:
-          j += 1
-        elif self._direction == Lexer.LEFT:
-          j -= 1
+          # Yo D how we doin'
         else:  # Invalid state
           raise LexerException(
               'Something dinked. {} is not a valid lexer direction.'.format(
