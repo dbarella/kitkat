@@ -44,7 +44,7 @@ class Lexer(object):
           t = token.Token(ch1, ch2)
 
           # If we get an escaped character, skip the lookahead.
-          # Note that characterize takes care of improperly escaped charaters.
+          # Note that characterize takes care of improperly escaped characters.
           if not t.is_kind(token.TOKENS[...]):
             yield t
             continue
