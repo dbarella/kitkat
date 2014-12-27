@@ -1,4 +1,7 @@
-"""Utility functions."""
+"""KitKat Utility functions."""
+
+
+__author__ = 'dan.barella@gmail.com (Dan Barella)'
 
 
 def pad(field_2d, padding):

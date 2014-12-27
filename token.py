@@ -1,4 +1,10 @@
+"""KitKat Token stuff."""
+
+
 import error
+
+
+__author__ = 'dan.barella@gmail.com (Dan Barella)'
 
 
 ESCAPE = '\''
