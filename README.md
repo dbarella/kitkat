@@ -27,8 +27,9 @@ e.g.
 
   '' (literal ' character)
 
-Furthermore, period (.) is treated as a special character, synonymous with
-space. To print a literal period, escape it with that leading single quote.
+Furthermore, comma (,) is treated as a special character, synonymous with space,
+and period (.) is treated as a no-op. To print a literal comma or period, escape
+it with that leading single quote.
 
 ---
 
