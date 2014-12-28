@@ -23,6 +23,7 @@ TOKENS = {
     LEFT: 'T_LEFT',
     '\'': 'T_SINGLE_QUOTE',
     '.': 'T_PERIOD',
+    ',': 'T_COMMA',
     '\n': 'T_NEWLINE',
     Ellipsis: 'T_CHAR',
     }
@@ -46,17 +47,17 @@ TRANSLATE_ESCAPE = {
 # Translate special characters to printable strings
 PRINTABLE_TOKEN_KINDS = {
     'T_SINGLE_QUOTE',
-    'T_PERIOD',
+    'T_COMMA',
     'T_NEWLINE',
     'T_CHAR',
     }
 
 
 # Translate the output string for certain tokens. This is different from
-# translating escape sequences because (for example) T_PERIOD is interpreted as
-# a space, and escaped to a period.
+# translating escape sequences because (for example) T_COMMA is interpreted as
+# a space, and escaped to a comma.
 TRANSLATE_SPECIAL_CHAR = {
-    '.': ' ',  # Period translates to space by default
+    ',': ' ',  # Comma translates to space by default
     }
 
 
