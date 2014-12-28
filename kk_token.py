@@ -40,6 +40,7 @@ TRANSLATE_ESCAPE = {
     LEFT: LEFT,
     '\'': '\'',
     '.': '.',
+    ',': ',',
     'n': '\n',
     }
 
@@ -127,8 +128,8 @@ class DFA(object):
         ch_translate = TRANSLATE_ESCAPE[ch]
         return Token(TOKENS[...], ch_translate)
       else:  # Bad escape sequence, complain
-        raise DFAException(
-            "{0}{{1}} is an invalid escape sequence".format(ESCAPE, ch))
+        raise error.DFAException(
+            "{0}{1} is an invalid escape sequence".format(ESCAPE, ch))
 
     else:  # Not escaped state
       if ch == ESCAPE:  # Possible escape sequence, wait for more input
