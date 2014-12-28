@@ -33,13 +33,13 @@ TOKENS = {
 # So, we map the lookahead character (the n, in the case of newline) to its
 # actual kind and character representation.
 TRANSLATE_ESCAPE = {
-    UP: (TOKENS[UP], UP),
-    RIGHT: (TOKENS[RIGHT], RIGHT),
-    DOWN: (TOKENS[DOWN], DOWN),
-    LEFT: (TOKENS[LEFT], LEFT),
-    '\'': (TOKENS['\''], '\''),
-    '.': (TOKENS['.'], '.'),
-    'n': (TOKENS[...], '\n'),
+    UP: UP,
+    RIGHT: RIGHT,
+    DOWN: DOWN,
+    LEFT: LEFT,
+    '\'': '\'',
+    '.': '.',
+    'n': '\n',
     }
 
 
@@ -102,8 +102,8 @@ class DFA(object):
     if self.escape:
       if ch in TRANSLATE_ESCAPE:  # Legit escape sequence, emit
         self.escape = False
-        kind, ch_translate = TRANSLATE_ESCAPE[ch]
-        return Token(kind, ch_translate)
+        ch_translate = TRANSLATE_ESCAPE[ch]
+        return Token(TOKENS[...], ch_translate)
       else:  # Bad escape sequence, complain
         raise DFAException(
             "{0}{{1}} is an invalid escape sequence".format(ESCAPE, ch))

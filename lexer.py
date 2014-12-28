@@ -4,7 +4,7 @@
 from __future__ import print_function
 import sys
 
-import token
+import kk_token
 import util
 
 
@@ -33,7 +33,7 @@ class Lexer(object):
     self._padding = None
     self._text_field = util.pad(self.lines, self._padding)
 
-    self._direction = token.RIGHT
+    self._direction = kk_token.RIGHT
 
   def __iter__(self):
     """Return a token iterator over the input text.
@@ -54,7 +54,7 @@ class Lexer(object):
       j = 1
 
       # Initialize the DFA
-      dfa = token.DFA()
+      dfa = kk_token.DFA()
 
       while self._text_field[i][j] != self._padding:
         ch = self._text_field[i][j]  # Current character
@@ -62,17 +62,17 @@ class Lexer(object):
         tok = dfa.step(ch)
 
         # Check for control character, change direction
-        if tok.is_directional():
+        if tok and tok.is_directional():
           self._direction = tok.character  # Gross, but we can because why not
 
         # Update i, j
-        if self._direction == token.LEFT:
+        if self._direction == kk_token.LEFT:
           j -= 1
-        elif self._direction == token.RIGHT:
+        elif self._direction == kk_token.RIGHT:
           j += 1
-        elif self._direction == token.UP:
+        elif self._direction == kk_token.UP:
           i -= 1
-        elif self._direction == token.DOWN:
+        elif self._direction == kk_token.DOWN:
           i += 1
           # Yo D how we doin'
 
