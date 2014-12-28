@@ -91,7 +91,7 @@ def main():
   with open(sys.argv[1], 'r') as f:
     l = Lexer(f)
     for i in l:
-      print(i)
+      print(i.__repr__())
 
 
 if __name__ == '__main__':

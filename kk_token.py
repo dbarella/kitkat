@@ -79,7 +79,7 @@ class Token(object):
     return self.kind == kind
 
   def __repr__(self):
-    return '<Token {0} ({1})>'.format(self.kind, self.character)
+    return '<Token {0}: {1} >'.format(self.kind, self.character)
 
   def __str__(self):
     return self.character
