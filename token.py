@@ -53,7 +53,8 @@ class Token(object):
     - character is either ch or a translated escape sequence.
 
       If this Token represents an escape sequence, then self.character will be
-      the translated escape sequence.
+      the translated escape sequence. Or at least, should be. There isn't any
+      code here to stop you from doing something stupid.
 
       e.g.:
         t = Token('\'', 'n')
@@ -63,6 +64,9 @@ class Token(object):
       kind (string): The T_ID of this token.
       character (char): The character(s) this Token represents.
     """
+    if kind not in TOKENS.values():
+      raise error.TokenException('{} is not a valid Token kind'.format(kind))
+
     self.kind = kind
     self.character = character
 
@@ -108,5 +112,8 @@ class DFA(object):
       if ch == ESCAPE:  # Possible escape sequence, wait for more input
         self.escape = True
         return None
-      else:  # Just a regular character
-        return Token(TOKENS[...], ch)
+      else:
+        if ch not in TOKENS: # Just a regular character
+          return Token(TOKENS[...], ch)
+        else:  # Special character
+          return Token(TOKENS[ch], ch)
