@@ -17,15 +17,15 @@ LEFT = '<'
 
 
 TOKENS = {
-  UP: 'T_UP',
-  RIGHT: 'T_RIGHT',
-  DOWN: 'T_DOWN',
-  LEFT: 'T_LEFT',
-  '\'': 'T_SINGLE_QUOTE',
-  '.': 'T_PERIOD',
-  '\n': 'T_NEWLINE',
-  Ellipsis: 'T_CHAR',
-  }
+    UP: 'T_UP',
+    RIGHT: 'T_RIGHT',
+    DOWN: 'T_DOWN',
+    LEFT: 'T_LEFT',
+    '\'': 'T_SINGLE_QUOTE',
+    '.': 'T_PERIOD',
+    '\n': 'T_NEWLINE',
+    Ellipsis: 'T_CHAR',
+    }
 
 
 # Escaped chars are sequences formed by escaping alphabetical characters.
@@ -40,6 +40,23 @@ TRANSLATE_ESCAPE = {
     '\'': '\'',
     '.': '.',
     'n': '\n',
+    }
+
+
+# Translate special characters to printable strings
+PRINTABLE_TOKEN_KINDS = {
+    'T_SINGLE_QUOTE',
+    'T_PERIOD',
+    'T_NEWLINE',
+    'T_CHAR',
+    }
+
+
+# Translate the output string for certain tokens. This is different from
+# translating escape sequences because (for example) T_PERIOD is interpreted as
+# a space, and escaped to a period.
+TRANSLATE_SPECIAL_CHAR = {
+    '.': ' ',  # Period translates to space by default
     }
 
 
@@ -77,6 +94,10 @@ class Token(object):
   def is_kind(self, kind):
     """Return True if self.kind == kind, False otherwise."""
     return self.kind == kind
+
+  def is_printable(self):
+    """Return True if it makes sense to print this token."""
+    return self.kind in PRINTABLE_TOKEN_KINDS
 
   def __repr__(self):
     return '<Token {0}: {1} >'.format(self.kind, self.character)
@@ -116,4 +137,7 @@ class DFA(object):
         if ch not in TOKENS: # Just a regular character
           return Token(TOKENS[...], ch)
         else:  # Special character
-          return Token(TOKENS[ch], ch)
+          if ch in TRANSLATE_SPECIAL_CHAR:
+            return Token(TOKENS[ch], TRANSLATE_SPECIAL_CHAR[ch])
+          else:
+            return Token(TOKENS[ch], ch)
