@@ -4,6 +4,7 @@
 from __future__ import print_function
 import sys
 
+import error
 import kk_token
 import util
 
@@ -77,7 +78,7 @@ class Lexer(object):
           # Yo D how we doin'
 
         else:  # Invalid state
-          raise LexerException(
+          raise error.LexerException(
               'Something dinked. {} is not a valid lexer direction.'.format(
                 self._direction))
 

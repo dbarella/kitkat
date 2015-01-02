@@ -17,34 +17,28 @@ LEFT = '<'
 
 
 TOKENS = {
-  UP: 'T_UP',
-  RIGHT: 'T_RIGHT',
-  DOWN: 'T_DOWN',
-  LEFT: 'T_LEFT',
-  '\'': 'T_SINGLE_QUOTE',
-  '.': 'T_PERIOD',
-  '\n': 'T_NEWLINE',
-  Ellipsis: 'T_CHAR',
-  }
-
-
-# Escaped chars are sequences formed by escaping alphabetical characters.
-# For example, 'n translates to newline
-# So, we map the lookahead character (the n, in the case of newline) to its
-# actual kind and character representation.
-TRANSLATE_ESCAPE = {
-    UP: UP,
-    RIGHT: RIGHT,
-    DOWN: DOWN,
-    LEFT: LEFT,
-    '\'': '\'',
-    '.': '.',
-    'n': '\n',
+    UP: 'T_UP',
+    RIGHT: 'T_RIGHT',
+    DOWN: 'T_DOWN',
+    LEFT: 'T_LEFT',
+    '\'': 'T_SINGLE_QUOTE',
+    '.': 'T_PERIOD',
+    ',': 'T_COMMA',
+    '\n': 'T_NEWLINE',
+    Ellipsis: 'T_CHAR',
     }
 
 
 class Token(object):
   """Represents a KitKat token."""
+
+  # Translate special characters to printable strings
+  PRINTABLE_TOKEN_KINDS = {
+      'T_SINGLE_QUOTE',
+      'T_COMMA',
+      'T_NEWLINE',
+      'T_CHAR',
+      }
 
   def __init__(self, kind, character):
     """Init a Token.
@@ -78,6 +72,10 @@ class Token(object):
     """Return True if self.kind == kind, False otherwise."""
     return self.kind == kind
 
+  def is_printable(self):
+    """Return True if it makes sense to print this token."""
+    return self.kind in self.PRINTABLE_TOKEN_KINDS
+
   def __repr__(self):
     return '<Token {0}: {1} >'.format(self.kind, self.character)
 
@@ -87,6 +85,28 @@ class Token(object):
 
 class DFA(object):
   """Maintains state in one place so that no one else has to suffer unduly."""
+
+  # Escaped chars are sequences formed by escaping alphabetical characters.
+  # For example, 'n translates to newline
+  # So, we map the lookahead character (the n, in the case of newline) to its
+  # actual kind and character representation.
+  TRANSLATE_ESCAPE = {
+      UP: UP,
+      RIGHT: RIGHT,
+      DOWN: DOWN,
+      LEFT: LEFT,
+      '\'': '\'',
+      '.': '.',
+      ',': ',',
+      'n': '\n',
+      }
+
+  # Translate the output string for certain tokens. This is different from
+  # translating escape sequences because (for example) T_COMMA is interpreted as
+  # a space, and escaped to a comma.
+  TRANSLATE_SPECIAL_CHAR = {
+      ',': ' ',  # Comma translates to space by default
+      }
 
   def __init__(self):
     self.escape = False
@@ -100,13 +120,13 @@ class DFA(object):
     Returns (Token): A Token if one can be emitted, None otherwise.
     """
     if self.escape:
-      if ch in TRANSLATE_ESCAPE:  # Legit escape sequence, emit
+      if ch in self.TRANSLATE_ESCAPE:  # Legit escape sequence, emit
         self.escape = False
-        ch_translate = TRANSLATE_ESCAPE[ch]
+        ch_translate = self.TRANSLATE_ESCAPE[ch]
         return Token(TOKENS[...], ch_translate)
       else:  # Bad escape sequence, complain
-        raise DFAException(
-            "{0}{{1}} is an invalid escape sequence".format(ESCAPE, ch))
+        raise error.DFAException(
+            "{0}{1} is an invalid escape sequence".format(ESCAPE, ch))
 
     else:  # Not escaped state
       if ch == ESCAPE:  # Possible escape sequence, wait for more input
@@ -116,4 +136,7 @@ class DFA(object):
         if ch not in TOKENS: # Just a regular character
           return Token(TOKENS[...], ch)
         else:  # Special character
-          return Token(TOKENS[ch], ch)
+          if ch in self.TRANSLATE_SPECIAL_CHAR:
+            return Token(TOKENS[ch], self.TRANSLATE_SPECIAL_CHAR[ch])
+          else:
+            return Token(TOKENS[ch], ch)
