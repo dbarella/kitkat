@@ -3,8 +3,8 @@ KitKat
 
 KitKat, a language that doesn't really do much.  
 
-KitKat is a 2D language string printing language, where the programmer controls
-the direction in which the program runs, as well as the content that is printed.  
+KitKat is a 2D string printing language where the programmer controls the
+direction in which the program runs, as well as the content that is printed.  
 
 Movement control characters are:  
 
